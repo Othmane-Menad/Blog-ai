@@ -35,6 +35,10 @@ const Card = ({
             src={image}
             placeholder="blur"
             style={{ objectFit: "cover" }}
+            sizes="(max-width: 480px) 100vw,
+                  (max-width: 768px) 85vw,
+                  (max-width: 1060px) 75vw,
+                  60vw"
           />
         </div>
       </Link>
