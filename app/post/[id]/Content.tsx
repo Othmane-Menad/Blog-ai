@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import { XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Sociallinks from "@/app/(shared)/Sociallinks";
+import { Editor, EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import EditorMenuBar from "./EditorMenuBar";
 
 type Props = {
   post: FormattedPost;
@@ -17,6 +20,23 @@ const Content = ({ post }: Props) => {
 
   const [content, setContent] = useState<string>(post.content);
   const [contentError, setContentError] = useState<string>("");
+
+  const handleIsEditable = (bool: boolean) => {
+    setisEditable(bool);
+    editor?.setEditable(bool);
+  };
+
+  const handleOnChangeContent = ({ editor }: any) => {
+    if (!(editor as Editor).isEmpty) setContentError("");
+    setContent((editor as Editor).getHTML());
+  };
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    onUpdate: handleOnChangeContent,
+    content: content,
+    editable: isEditable,
+  });
 
   const handleSubmit = () => {};
   console.log(post);
@@ -33,12 +53,12 @@ const Content = ({ post }: Props) => {
         <div className="mt-4">
           {isEditable ? (
             <div className="flex justify-between gap-3">
-              <button onClick={() => console.log("cancel-edit")}>
+              <button onClick={() => handleIsEditable(!isEditable)}>
                 <XMarkIcon className="h-6 w-6 text-accent-red" />
               </button>
             </div>
           ) : (
-            <button onClick={() => console.log("make-edit")}>
+            <button onClick={() => handleIsEditable(!isEditable)}>
               <PencilSquareIcon className="h-6 w-6 text-accent-red" />
             </button>
           )}
@@ -77,6 +97,22 @@ const Content = ({ post }: Props) => {
                   60vw"
             style={{ objectFit: "cover" }}
           />
+        </div>
+
+        <div
+          className={
+            isEditable
+              ? "border-2 rounded-md bg-wh-50 p-3"
+              : "w-full max-w-full"
+          }
+        >
+          {isEditable && (
+            <>
+              <EditorMenuBar editor={editor} />
+              <hr className="border-1 my-2 mb-5" />
+            </>
+          )}
+          <EditorContent editor={editor} />
         </div>
 
         {/* SUBMIT BUTTON */}
