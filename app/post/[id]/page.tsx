@@ -13,32 +13,35 @@ type Props = {
 export const revalidate = 60;
 
 const getPost = async (id: string) => {
-  const post: PostType | null = await prisma.post.findUnique({
-    where: { id },
-  });
+  try {
+    const post: PostType | null = await prisma.post.findUnique({
+      where: { id },
+    });
 
-  if (!post) {
-    console.log(`Post with id ${id} not found`);
-    return null;
-  }
+    if (!post) {
+      console.log(`Post with id ${id} not found`);
+      return null;
+    }
 
-  const formattedPost = {
-    ...post,
-    createdAt: post?.createdAt?.toISOString(),
-    updateAt: post?.updateAt?.toISOString(),
-  };
-  return formattedPost;
+    const formattedPost = {
+      ...post,
+      createdAt: post?.createdAt?.toISOString(),
+      updateAt: post?.updateAt?.toISOString(),
+    };
+    return formattedPost;
+  } catch (error) {}
 };
 
 const Post = async ({ params }: Props) => {
   const { id } = params;
-  const post: FormattedPost | null = await getPost(id);
-  console.log(post);
+  const post: FormattedPost | null | undefined = await getPost(id);
 
   return (
     <main className="px-10 leading-7">
       <div className="md:flex gap-10 mb-5">
-        <div className="basis-3/4">{post && <Content post={post} />}</div>
+        <div className="basis-3/4">
+          {post ? <Content post={post} /> : <h2>post not found.</h2>}
+        </div>
         <div className="basis-1/4">
           <Sidebar />
         </div>
