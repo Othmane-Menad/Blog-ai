@@ -45,8 +45,8 @@ const CategoryAndEdit = ({
         {post.category}
       </h4>
       <div className="mt-4">
-        {isEditable ? (
-          <div className="flex justify-between gap-3">
+        {/*  {isEditable ? (
+          <div className="flex justify-between gap-3 ">
             <button onClick={handleCancelEdit}>
               <XMarkIcon className="h-6 w-6 text-accent-red" />
             </button>
@@ -55,7 +55,7 @@ const CategoryAndEdit = ({
           <button onClick={handleEnableEdit}>
             <PencilSquareIcon className="h-6 w-6 text-accent-red" />
           </button>
-        )}
+        )} */}
       </div>
     </div>
   );
